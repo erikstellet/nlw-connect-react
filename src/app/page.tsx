@@ -1,7 +1,17 @@
+import { ArrowRight, Copy } from "lucide-react";
+
+import { Button, IconButton } from "@/components";
+
 export default function Home() {
   return (
     <main>
-      <div>Hello world!</div>
+      <Button type="button">
+        Enviar <ArrowRight />
+      </Button>
+
+      <IconButton>
+        <Copy />
+      </IconButton>
     </main>
   );
 }
