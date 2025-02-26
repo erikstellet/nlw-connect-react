@@ -7,6 +7,8 @@ import z from 'zod'
 
 import { Button } from '@/components/button'
 import { InputField, InputIcon, InputRoot } from '@/components/input'
+import { postSubscriptions } from '@/http/api'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const subscriptionSchema = z.object({
   name: z.string().min(2, 'Digite seu nome completo'),
@@ -16,6 +18,9 @@ const subscriptionSchema = z.object({
 type SubscriptionSchema = z.infer<typeof subscriptionSchema>
 
 export default function SubscriptionForm() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const {
     handleSubmit,
     formState: { errors },
@@ -24,8 +29,11 @@ export default function SubscriptionForm() {
     resolver: zodResolver<SubscriptionSchema>(subscriptionSchema),
   })
 
-  function onSubscribe(data: SubscriptionSchema) {
-    console.log(data)
+  async function onSubscribe({ email, name }: SubscriptionSchema) {
+    const referrer = searchParams.get('referrer')
+    const { subscriberId } = await postSubscriptions({ email, name, referrer })
+
+    router.push(`invite/${subscriberId}`)
   }
 
   return (
